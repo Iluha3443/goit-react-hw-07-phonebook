@@ -1,5 +1,5 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit";
-import { fetchContacts, deleteContact } from "./contacts-api";
+import { fetchContacts, deleteContact,addNewContact } from "./contacts-api";
 
 export const contactSlice = createSlice({
     name: "contacts",
@@ -13,11 +13,7 @@ export const contactSlice = createSlice({
     },
     reducers: {
         handleSubmit(state, actions) {
-            state.contacts.items.push({
-                id: nanoid(),
-                name: actions.payload.name,
-                number: actions.payload.number
-            })
+            state.contacts.items.push(actions.payload)
         },
         deleteNumber(state, actions) {
             state.contacts.items = state.contacts.items.filter(contact => contact.id !== actions.payload)
@@ -26,43 +22,37 @@ export const contactSlice = createSlice({
             state.filter = actions.payload
         },
     },
-    extraReducers: (builder) => {
-        builder
-            .addCase(fetchContacts.pending, (state) => {
-                state.contacts.isLoading = true;
-                state.contacts.error = null;
-            })
-            .addCase(fetchContacts.fulfilled, (state, action) => {
-                state.contacts.isLoading = false;
-                state.contacts.items = action.payload;
-            })
-            .addCase(fetchContacts.rejected, (state, action) => {
-                state.contacts.isLoading = false;
-                state.contacts.error = action.error;
-            })
-             .addMatcher(
-                (action) => action.type === deleteContact.pending.type,
-                (state) => {
-                    state.contacts.isLoading = true;
-                    state.contacts.error = null;
-                }
-            )
-            .addMatcher(
-                (action) => action.type === deleteContact.fulfilled.type,
-                (state, action) => {
-                    state.contacts.isLoading = false;
-                    state.contacts.items = action.payload;
-                }
-            )
-            .addMatcher(
-                (action) => action.type === deleteContact.rejected.type,
-                (state, action) => {
-                    state.contacts.isLoading = false;
-                    state.contacts.error = action.error;
-                }
-            );
+    extraReducers: {
+        [fetchContacts.pending]: (state, actions) => {
+            state.contacts.isLoading = true;
+        },
+        [fetchContacts.fulfilled]: (state, actions) => {
+            state.contacts.isLoading = false;
+            state.contacts.items = actions.payload;
+        },
+         [fetchContacts.rejected]: (state, actions) => {
+             state.contacts.isLoading = false;
+             state.contacts.error = actions.payload;
+        },
+         [deleteContact.pending]: (state, actions) => {
+            state.contacts.isLoading = true;
+        },
+          [deleteContact.fulfilled]: (state, actions) => {
+            state.contacts.isLoading = false;
+        },
+        [deleteContact.rejected]: (state, actions) => {
+            state.contacts.isLoading = false;
+        },
+         [addNewContact.pending]: (state, actions) => {
+            state.contacts.isLoading = true;
+        },
+         [addNewContact.fulfilled]: (state, actions) => {
+            state.contacts.isLoading = false;
+        },
+         [addNewContact.rejected]: (state, actions) => {
+            state.contacts.isLoading = false;
+        },
     }
 });
 
 export const { handleSubmit, deleteNumber, filteredContacts } = contactSlice.actions;
-  

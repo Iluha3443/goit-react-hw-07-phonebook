@@ -4,6 +4,7 @@ import { Filter } from "components/Filter/Filter";
 import { ContactList } from "components/ContactList/ContactList";
 import { useDispatch } from 'react-redux';
 import { handleSubmit } from "redux/contactsSlice";
+import { addNewContact} from 'redux/contacts-api';
 
 
 const PhoneBook = () => {
@@ -16,10 +17,10 @@ const PhoneBook = () => {
         const contact = {
             id: nanoid(),
             name: nameContact,
-            number: numberTel,
+            phone: numberTel,
         }
 
-        dispatch(handleSubmit(contact))
+        dispatch(addNewContact(contact))
         evt.target.name.value = '';
         evt.target.number.value = '';
     }
