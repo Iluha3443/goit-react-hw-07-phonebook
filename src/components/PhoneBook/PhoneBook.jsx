@@ -3,7 +3,6 @@ import { ContactForm } from "../ContactForm/ContactForm";
 import { Filter } from "components/Filter/Filter";
 import { ContactList } from "components/ContactList/ContactList";
 import { useDispatch } from 'react-redux';
-import { handleSubmit } from "redux/contactsSlice";
 import { addNewContact} from 'redux/contacts-api';
 
 
